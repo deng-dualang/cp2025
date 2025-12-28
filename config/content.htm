@@ -2961,7 +2961,128 @@ timer.set_timeout(check_and_move, 1000)</pre>
 <p>整體而言，這門課讓我從「看不懂程式」到能夠理解並撰寫基本程式，並將程式實際應用在機器人行走與圖形繪製上。這不僅提升了我的邏輯思考能力，也讓我對後續與工程、設計相關的課程建立了良好的基礎。</p>
 <p><span> </span></p>
 <p><span> </span></p>
+<h1>期末影片(三個小遊戲)</h1>
+<p>41023235所作:</p>
+<p><span>成功執行</span><span>上述三個程式的過程影片</span></p>
+<p><span>:<a href="https://www.youtube.com/watch?v=0uI5hwq-kww">https://www.youtube.com/watch?v=0uI5hwq-kww</a></span></p>
+<p><span>:<a href="https://www.youtube.com/watch?v=5HVbdzq9Dhc">https://www.youtube.com/watch?v=5HVbdzq9Dhc</a></span></p>
+<p><span>:<a href="https://www.youtube.com/watch?v=B6yYcK0gCmg">https://www.youtube.com/watch?v=B6yYcK0gCmg</a></span></p>
 <p><span> </span></p>
+<div id="mpl_output2">心得</div>
+<div>
+<h4>前言</h4>
+<h4>在這次實作中，我接觸並操作一個以<span> </span><strong>Flask</strong><span> </span>為後端、<strong>Brython</strong><span> </span>為前端的專案。一開始面對指令、資料夾結構與啟動流程時感到相當陌生，但透過逐步排錯與實際操作，我逐漸理解了整個系統的架構，以及各元件之間如何協同運作。以下是我對本專案架構與操作流程的理解與心得整理。</h4>
+<hr/>
+<h4>一、整體架構理解</h4>
+<h4>本專案屬於典型的 Web 應用程式，採用前後端分離但同一專案管理的方式：</h4>
+<ul>
+<li>
+<h4><strong>後端（Flask）</strong>：負責處理 HTTP 請求、路由控制、資料庫操作，以及將頁面回傳給瀏覽器。</h4>
+</li>
+<li>
+<h4><strong>前端（HTML + Brython）</strong>：由 Flask 的模板系統載入 HTML，再透過 Brython 讓 Python 程式碼在瀏覽器中執行，負責畫面互動與邏輯呈現。</h4>
+</li>
+</ul>
+<h4>這樣的架構讓我第一次體會到「Python 不只是在寫後端，也能進到瀏覽器端執行」。</h4>
+<hr/>
+<h4>二、資料夾結構的角色分工</h4>
+<h4>在專案目錄中，可以清楚看到 Flask 專案的標準結構：</h4>
+<ul>
+<li>
+<h4><strong>app.py</strong>：整個系統的入口。負責建立 Flask 應用、定義路由（例如<span> </span><code inline="">/</code>）、啟動伺服器。</h4>
+</li>
+<li>
+<h4><strong>templates/</strong>：存放 HTML 樣板。Flask 透過<span> </span><code inline="">render_template()</code><span> </span>將這些頁面回傳給使用者。</h4>
+</li>
+<li>
+<h4><strong>static/</strong>：存放前端靜態資源，例如 JavaScript、Brython 程式、CSS、圖片等。</h4>
+</li>
+<li>
+<h4><strong>robot.sqlite</strong>：資料庫檔案，用來保存系統運作時所需的資料。</h4>
+</li>
+<li>
+<h4><strong>其他 .py 檔案</strong>：輔助功能模組，例如資料建立、資料處理或舊版本備份。</h4>
+</li>
+</ul>
+<h4>透過實際用<span> </span><code inline="">dir</code><span> </span>指令查看資料夾，我才真正理解「為什麼一定要在有<span> </span><code inline="">app.py</code><span> </span>的資料夾執行<span> </span><code inline="">python app.py</code>」。</h4>
+<hr/>
+<h4>三、啟動流程的實際體會</h4>
+<h4>整個系統的操作流程可以整理為以下步驟：</h4>
+<ol>
+<li>
+<h4><strong>進入正確的專案資料夾</strong>（確保裡面有<span> </span><code inline="">app.py</code>）。</h4>
+</li>
+<li>
+<h4>在命令列執行<span> </span><code inline="">python app.py</code>。</h4>
+</li>
+<li>
+<h4>Flask 啟動後，在本機開啟一個開發伺服器（<code inline="">127.0.0.1:5000</code>）。</h4>
+</li>
+<li>
+<h4>使用瀏覽器連線到該網址，取得由 Flask 回傳的 HTML 頁面。</h4>
+</li>
+<li>
+<h4>HTML 載入後，Brython 在瀏覽器中執行 Python 程式，完成互動功能。</h4>
+</li>
+</ol>
+<h4>過程中我也學到：</h4>
+<ul>
+<li>
+<h4>命令列顯示「Running on<span> </span><a href="http://127.0.0.1:5000%E3%80%8D%E4%BB%A3%E8%A1%A8**%E6%88%90%E5%8A%9F%E5%95%9F%E5%8B%95%EF%BC%8C%E4%B8%8D%E6%98%AF%E9%8C%AF%E8%AA%A4**%E3%80%82">http://127.0.0.1:5000」代表**成功啟動，不是錯誤**。</a></h4>
+</li>
+<li>
+<h4>網頁一直 loading，通常不是瀏覽器問題，而是後端路由或前端資源卡住。</h4>
+</li>
+</ul>
+<hr/>
+<h4>四、除錯過程帶來的學習</h4>
+<h4>在實作中，我遇到多次錯誤，例如：</h4>
+<ul>
+<li>
+<h4>找不到<span> </span><code inline="">app.py</code></h4>
+</li>
+<li>
+<h4>Clone 到錯誤的資料夾（<code inline="">1、2、3</code>）</h4>
+</li>
+<li>
+<h4>瀏覽器一直 loading</h4>
+</li>
+</ul>
+<h4>這些錯誤讓我學會用「系統化的方式排查」：</h4>
+<ul>
+<li>
+<h4>先確認<strong>目前所在目錄</strong></h4>
+</li>
+<li>
+<h4>再確認<strong>檔案是否存在</strong></h4>
+</li>
+<li>
+<h4>接著檢查 Flask 是否有收到請求（cmd 是否出現<span> </span><code inline="">GET /</code>）</h4>
+</li>
+<li>
+<h4>最後才檢查程式邏輯本身</h4>
+</li>
+</ul>
+<h4>這種思考方式比單純「重裝或亂試指令」有效得多。</h4>
+<hr/>
+<h4>五、學習心得與反思</h4>
+<p>透過這次操作，我最大的收穫不是寫了多少程式，而是：</p>
+<ul>
+<li>
+<p>真正理解一個 Web 專案「從指令列到瀏覽器」的完整流程</p>
+</li>
+<li>
+<p>明白資料夾結構不是擺好看的，而是每一層都有責任</p>
+</li>
+<li>
+<p>體會到錯誤訊息其實是在「提示方向」，而不是單純阻礙</p>
+</li>
+</ul>
+<p>對身為學生的我來說，這是一個從「照指令操作」到「理解系統運作」的重要轉變。</p>
+<hr/>
+<h4>結語</h4>
+<p>總結來說，這個 Flask × Brython 專案讓我初步建立了 Web 應用的整體觀念，也訓練了我面對錯誤時的分析能力。未來若再接觸類似專案，我會先看結構、再跑程式、最後才修改內容，而不是一開始就感到不知所措。這次的學習經驗，對我而言是非常扎實且有成就感的一次實作。</p>
+</div>
 <p><span> </span></p><h1>Ref</h1><h2>Reeborg</h2>
 <p><a href="https://mde.tw/cp2025/reeborg?lang=en&amp;mode=python&amp;menu=worlds/menus/select_collection_en.json&amp;name=Alone&amp;url=worlds/tutorial_en/harvest1.json&amp;editor=python/harvest1.py">https://mde.tw/cp2025/reeborg?lang=en&amp;mode=python&amp;menu=worlds/menus/select_collection_en.json&amp;name=Alone&amp;url=worlds/tutorial_en/harvest1.json&amp;editor=python/harvest1.py</a></p>
 <p><a href="https://mde.tw/cp2025/reeborg?lang=en&amp;mode=python&amp;menu=worlds/menus/select_collection_en.json&amp;name=Alone&amp;url=worlds/tutorial_en/harvest1.json&amp;editor=python/harvest1_east_west.py">https://mde.tw/cp2025/reeborg?lang=en&amp;mode=python&amp;menu=worlds/menus/select_collection_en.json&amp;name=Alone&amp;url=worlds/tutorial_en/harvest1.json&amp;editor=python/harvest1_east_west.py</a> </p>
