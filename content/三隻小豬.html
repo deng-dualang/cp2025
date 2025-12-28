@@ -2,7 +2,7 @@
         <head>
         <title>cp2025</title>
         <meta charset="utf-8">
-<meta property="head" content="H2">
+<meta property="head" content="H1">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <link rel="stylesheet" href="./../cmsimde/static/chimper/fonts/icomoon/style.css">
         <link rel="stylesheet" href="./../cmsimde/static/chimper/css/bootstrap.min.css">
@@ -142,125 +142,39 @@ img.add_border {
           </div>
           
         </header>
-    <div id="tipue_search_content">Python_ex1 << <a href='Python_ex1.html'>Previous</a> <a href='HTML and CSS.html'>Next</a> >> HTML and CSS<br /><h1>Javascript</h1>
-<h4>JavaScript 初學者完整學習指引</h4>
-<h4>一、為什麼學 JavaScript？</h4>
-<ul>
-<li>JavaScript 是網頁開發必學語言，執行於所有主流瀏覽器。</li>
-<li>可用於前端（瀏覽器）、後端（Node.js）、行動應用、桌面應用等。</li>
-<li>社群大、資源多，學會 JS 等於打開 Web 世界大門。</li>
-</ul>
-<h4>二、學習流程建議</h4>
-<ol>
-<li>認識 JavaScript 應用場景及基礎語法。</li>
-<li>熟悉開發與測試環境：<br/>推薦直接在 Chrome、Edge、Firefox 等瀏覽器按 F12 開啟「開發人員工具」→「主控台(Console)」練習。</li>
-<li>循序漸進學習語法與邏輯：從變數、流程控制、函式、物件等開始。</li>
-<li>多做練習題與小專案。</li>
-<li>了解 DOM 操作、事件處理與基礎網頁互動。</li>
-<li>進階可學習 ES6+ 新語法與框架（如 React、Vue）。</li>
+    <div id="tipue_search_content">期末影片(三個小遊戲) << <a href='期末影片(三個小遊戲).html'>Previous</a> <a href='Ref.html'>Next</a> >> Ref<br /><h1>三隻小豬</h1>
+<p>41023235所作:</p>
+<div id="brython_div2">網站:<a href="http://127.0.0.1:5000/game">http://127.0.0.1:5000/game</a></div>
+<div>
+<div>可在瀏覽器執行、畫面不空白、只有三隻豬、永不重疊的gmme.py:</div>
+<div># game.py<br/>from browser import document, html, timer, ajax, window<br/>from random import random<br/><br/>canvas = document["gameCanvas"]<br/>ctx = canvas.getContext("2d")<br/>WIDTH, HEIGHT = 800, 400<br/><br/># 圖片<br/>bird_img = html.IMG(src="./../cmsimde/static/images/bird.png")<br/>pig_img = html.IMG(src="./../cmsimde/static/images/pig.png")<br/><br/># 遊戲狀態<br/>SLING_X, SLING_Y = 120, 300<br/>MAX_SHOTS = 10<br/>shots_fired = 0<br/>total_score = 0<br/>current_shot_score = 0<br/>mouse_down = False<br/>mouse_pos = (SLING_X, SLING_Y)<br/>projectile = None<br/>sent = False<br/><br/># ------------------------------------------<br/># 類別<br/># ------------------------------------------<br/>class Pig:<br/>def __init__(self,x,y):<br/>self.x,self.y = x,y<br/>self.w,self.h = 40,40<br/>self.alive = True<br/><br/># 房舍相對於小豬的相對位置 (整體用來碰撞檢查)<br/>self.house_blocks = [<br/>(0, 40, 120, 15), # 地基<br/>(0, -10, 15, 50), # 左牆<br/>(105, -10, 15, 50), # 右牆<br/>(0, -25, 120, 15) # 屋頂<br/>]<br/># 計算整體矩形範圍<br/>self.compute_bounds()<br/><br/>def compute_bounds(self):<br/># 找到房子和豬的最大矩形範圍<br/>xs = [rx-40 for rx,_,rw,_ in self.house_blocks] + [0]<br/>ys = [ry for _,ry,_,rh in self.house_blocks] + [0]<br/>ws = [rw for _,_,rw,_ in self.house_blocks] + [self.w]<br/>hs = [rh for _,_,_,rh in self.house_blocks] + [self.h]<br/>min_x = min(xs)<br/>min_y = min(ys)<br/>max_x = max([x+w for x,w in zip(xs,ws)])<br/>max_y = max([y+h for y,h in zip(ys,hs)])<br/>self.bound_x = self.x + min_x<br/>self.bound_y = self.y + min_y<br/>self.bound_w = max_x - min_x<br/>self.bound_h = max_y - min_y<br/><br/>def draw(self):<br/>if self.alive:<br/>ctx.fillStyle="saddlebrown"<br/>for rx, ry, rw, rh in self.house_blocks:<br/>ctx.fillRect(self.x + rx - 40, self.y + ry, rw, rh)<br/>ctx.drawImage(pig_img,self.x,self.y,self.w,self.h)<br/>self.compute_bounds()<br/><br/>def hit(self,px,py):<br/>return self.alive and self.x&lt;=px&lt;=self.x+self.w and self.y&lt;=py&lt;=self.y+self.h<br/><br/>def relocate(self, all_pigs):<br/>MIN_X = 450<br/>MAX_X = WIDTH - self.w - 120<br/>MIN_Y = 200<br/>MAX_Y = HEIGHT - self.h - 15<br/><br/>attempts = 0<br/>while True:<br/>new_x = MIN_X + random() * (MAX_X - MIN_X)<br/>new_y = MIN_Y + random() * (MAX_Y - MIN_Y)<br/># 更新暫時位置，用於矩形碰撞檢查<br/>temp_bound_x = new_x - 40<br/>temp_bound_y = new_y - 25<br/>temp_bound_w = 120<br/>temp_bound_h = 75<br/><br/># 檢查與其他豬房屋矩形是否重疊<br/>overlap = False<br/>for p in all_pigs:<br/>if p == self:<br/>continue<br/>if (temp_bound_x &lt; p.bound_x + p.bound_w and<br/>temp_bound_x + temp_bound_w &gt; p.bound_x and<br/>temp_bound_y &lt; p.bound_y + p.bound_h and<br/>temp_bound_y + temp_bound_h &gt; p.bound_y):<br/>overlap = True<br/>break<br/>if not overlap:<br/>self.x = new_x<br/>self.y = new_y<br/>self.compute_bounds()<br/>break<br/>attempts += 1<br/>if attempts &gt; 1000:<br/>break<br/><br/>class Bird:<br/>def __init__(self,x,y,vx,vy):<br/>self.x,self.y,self.vx,self.vy = x,y,vx,vy<br/>self.w,self.h = 35,35<br/>self.active = True<br/><br/>def update(self):<br/>global current_shot_score, total_score<br/>if not self.active: return<br/>self.vy += 0.35<br/>self.x += self.vx<br/>self.y += self.vy<br/><br/>if self.y &gt; HEIGHT - self.h or self.x &gt; WIDTH or self.x &lt; 0:<br/>self.active = False<br/><br/>for p in pigs:<br/>if p.hit(self.x+self.w/2,self.y+self.h/2):<br/>if p.alive:<br/>p.relocate(pigs)<br/>current_shot_score += 50<br/>total_score += 50<br/>document["score_display"].text = str(total_score)<br/><br/>def draw(self):<br/>ctx.drawImage(bird_img,self.x,self.y,self.w,self.h)<br/><br/># ------------------------------------------<br/># 遊戲控制函數<br/># ------------------------------------------<br/>pigs = []<br/><br/>def init_level():<br/>global pigs<br/>pigs = []<br/>positions = []<br/>MIN_X = 450<br/>MAX_X = WIDTH - 40 - 120<br/>MIN_Y = 200<br/>MAX_Y = HEIGHT - 40 - 15<br/>while len(pigs) &lt; 3:<br/>x = MIN_X + random() * (MAX_X - MIN_X)<br/>y = MIN_Y + random() * (MAX_Y - MIN_Y)<br/># 房屋整體矩形<br/>bound_x = x - 40<br/>bound_y = y - 25<br/>bound_w = 120<br/>bound_h = 75<br/># 檢查與已生成的豬房屋不重疊<br/>overlap = False<br/>for px, py, pw, ph in positions:<br/>if (bound_x &lt; px + pw and bound_x + bound_w &gt; px and<br/>bound_y &lt; py + ph and bound_y + bound_h &gt; py):<br/>overlap = True<br/>break<br/>if not overlap:<br/>pig = Pig(x, y)<br/>pigs.append(pig)<br/>positions.append((bound_x, bound_y, bound_w, bound_h))<br/><br/>def reset_sling_state():<br/>global shots_fired, current_shot_score, projectile, sent<br/>shots_fired = 0<br/>current_shot_score = 0<br/>projectile = None<br/>sent = False<br/>init_level()<br/>update_shots_remaining()<br/><br/>def start_new_game():<br/>global total_score<br/>total_score = 0<br/>document["score_display"].text = str(total_score)<br/>reset_sling_state()<br/><br/>def update_shots_remaining():<br/>document["shots_remaining"].text = str(MAX_SHOTS - shots_fired)<br/><br/>def get_mouse_pos(evt):<br/>return evt.x - canvas.offsetLeft, evt.y - canvas.offsetTop<br/><br/>def mousedown(evt):<br/>global mouse_down, mouse_pos<br/>if projectile is None and shots_fired &lt; MAX_SHOTS:<br/>mouse_down = True<br/>mouse_pos = get_mouse_pos(evt)<br/><br/>def mousemove(evt):<br/>global mouse_pos<br/>if mouse_down:<br/>mouse_pos = get_mouse_pos(evt)<br/><br/>def mouseup(evt):<br/>global mouse_down, projectile, shots_fired, current_shot_score<br/>if mouse_down and projectile is None:<br/>current_shot_score = 0<br/>mouse_down = False<br/>end_pos = get_mouse_pos(evt)<br/>dx = SLING_X - end_pos[0]<br/>dy = SLING_Y - end_pos[1]<br/>projectile = Bird(SLING_X, SLING_Y, dx*0.25, dy*0.25)<br/>shots_fired += 1<br/>update_shots_remaining()<br/><br/>canvas.bind("mousedown", mousedown)<br/>canvas.bind("mousemove", mousemove)<br/>canvas.bind("mouseup", mouseup)<br/><br/>def draw_sling():<br/>ctx.strokeStyle="black"<br/>ctx.lineWidth=4<br/>if mouse_down:<br/>mx,my = mouse_pos<br/>ctx.beginPath()<br/>ctx.moveTo(SLING_X-5, SLING_Y)<br/>ctx.lineTo(mx,my)<br/>ctx.stroke()<br/>ctx.beginPath()<br/>ctx.moveTo(SLING_X+5, SLING_Y)<br/>ctx.lineTo(mx,my)<br/>ctx.stroke()<br/>ctx.drawImage(bird_img,mx-17,my-17,35,35)<br/>else:<br/>if projectile is None and shots_fired &lt; MAX_SHOTS:<br/>ctx.drawImage(bird_img,SLING_X-17,SLING_Y-17,35,35)<br/><br/>def send_score():<br/>global sent, total_score<br/>if sent: return<br/>sent = True<br/>def on_complete(req):<br/>if req.status == 200:<br/>print("Score saved successfully.")<br/>else:<br/>try:<br/>resp = window.JSON.parse(req.text)<br/>msg = resp.message<br/>except:<br/>msg = "Server error or bad response format."<br/>print(f"Score submission failed: HTTP {req.status}, Message: {msg}")<br/>req = ajax.ajax()<br/>req.bind('complete', on_complete)<br/>req.open("POST","/submit_score", True)<br/>req.set_header("Content-Type","application/json")<br/>data = {"score":total_score}<br/>json_payload = window.JSON.stringify(data)<br/>req.send(json_payload)<br/><br/># ------------------------------------------<br/># 遊戲主迴圈<br/># ------------------------------------------<br/>def loop():<br/>global projectile<br/>ctx.clearRect(0,0,WIDTH,HEIGHT)<br/><br/>for p in pigs: p.draw()<br/><br/>game_over = shots_fired &gt;= MAX_SHOTS<br/><br/>if projectile:<br/>projectile.update()<br/>projectile.draw()<br/><br/>if not projectile.active:<br/>projectile = None<br/>if game_over:<br/>send_score()<br/>timer.set_timeout(start_new_game, 2000)<br/><br/>elif game_over:<br/>send_score()<br/>timer.set_timeout(start_new_game, 2000)<br/><br/>draw_sling()<br/><br/>timer.set_interval(loop,30)<br/>start_new_game()</div>
+<div>心得:</div>
+<div>
+<h4 data-end="113" data-start="92">課程學習心得（41023235 黃俊錡）</h4>
+<p data-end="211" data-start="115">透過本課程的學習與實作，我對電腦程式設計在互動模擬與系統行為控制上的應用有了更深入的理解。課程中不只是學習程式語法，而是透過實際撰寫與修改程式，將抽象的邏輯轉換成可在畫面中即時呈現的互動結果。</p>
+<p data-end="375" data-start="213">在實作「三隻小豬」的遊戲過程中，我實際遇到了多項困難。首先是在關卡初始化時，小豬常常生成在相同或非常接近的位置，導致畫面重疊，甚至在被擊中時出現「同歸於盡」的情況。為了解決這個問題，我嘗試加入隨機生成座標的機制，並透過設定最小距離，逐一檢查新生成的位置是否與已存在的小豬過於接近，確保三隻小豬能夠分散且不重疊地出現在畫面中。</p>
+<p data-end="494" data-start="377">另一個困難是在小豬被擊中後的行為設計。一開始小豬被擊中後，位置沒有重新調整，導致仍然集中在同一區域，影響遊戲的可玩性。因此，我進一步調整程式邏輯，讓小豬在被擊中後能重新隨機配置位置，並再次檢查彼此之間的距離，使遊戲流程更加合理且穩定。</p>
+<p data-end="611" data-start="496">在反覆修改與測試的過程中，我也曾遇到程式錯誤導致網頁畫面全白、遊戲無法執行的情況，這讓我體會到程式結構與函式修改必須謹慎，任何一個小錯誤都可能影響整個系統運作。透過不斷檢查錯誤訊息與調整程式內容，我逐漸培養了除錯與問題分析的能力。</p>
+<p data-end="694" data-start="613">透過這些實作經驗，我了解到程式設計不只是讓功能完成，更需要考慮物件之間的互動關係、系統穩定性以及使用者體驗。這樣的概念在遊戲設計、模擬系統與工程應用中都相當重要。</p>
+<p data-end="528" data-start="402">此外，透過 pygame 這類圖形與事件導向的程式設計方式，我對互動式系統的運作有更清楚的概念，例如使用者輸入如何影響系統狀態、物件如何依據規則即時回應。這樣的能力不僅限於遊戲，也能延伸應用到人機介面設計、機器人模擬、智慧裝置控制與教學模擬系統等領域。</p>
+<p data-end="555" data-start="530">就未來應用而言，學生可以將這些技能運用在以下方向：</p>
+<ol data-end="716" data-start="556">
+<li data-end="596" data-start="556">
+<p data-end="596" data-start="559"><strong data-end="572" data-start="559">工程與機械相關領域</strong>：用於機構運動模擬、碰撞檢測、系統行為預測。</p>
+</li>
+<li data-end="635" data-start="597">
+<p data-end="635" data-start="600"><strong data-end="613" data-start="600">遊戲與互動媒體設計</strong>：設計具有規則判斷與即時反應的互動內容。</p>
+</li>
+<li data-end="676" data-start="636">
+<p data-end="676" data-start="639"><strong data-end="652" data-start="639">機器人與自動化模擬</strong>：在實體製作前，先以程式模擬行為與環境互動。</p>
+</li>
+<li data-end="716" data-start="677">
+<p data-end="716" data-start="680"><strong data-end="694" data-start="680">跨領域專題與專案實作</strong>：結合設計、工程與程式能力，提升專題完整度。</p>
+</li>
 </ol>
-<h4>三、JavaScript 必學基礎語法與範例</h4>
-<table>
-<tbody>
-<tr>
-<th>語法主題</th>
-<th>說明</th>
-<th>範例</th>
-</tr>
-<tr>
-<td>變數宣告</td>
-<td>用 <code>let</code>、<code>const</code>（現代 JS），<br/>不要再用 <code>var</code>。</td>
-<td><code>let x = 10;<br/>const pi = 3.14;</code></td>
-</tr>
-<tr>
-<td>資料型態</td>
-<td>數字（Number）、字串（String）、布林（Boolean）、陣列（Array）、物件（Object）、null、undefined</td>
-<td><code> let s = "hi";<br/> let arr = [1,2,3];<br/> let person = { name: "Tom", age: 20 }; </code></td>
-</tr>
-<tr>
-<td>輸出</td>
-<td>用 <code>console.log()</code> 輸出到主控台</td>
-<td><code>console.log("Hello!");<br/>console.log(x + 2);</code></td>
-</tr>
-<tr>
-<td>運算子</td>
-<td>數學（+、-、*、/、%）、比較（==、===、!=、!==、&gt;、&lt;）、邏輯（&amp;&amp;、||、!）</td>
-<td><code> let z = x + 5;<br/> x === 10<br/> (a &gt; 0) &amp;&amp; (b &lt; 5) </code></td>
-</tr>
-<tr>
-<td>條件判斷</td>
-<td>if、else if、else</td>
-<td><code> if (x &gt; 0) {<br/>   console.log("正數");<br/> } else {<br/>   console.log("非正數");<br/> } </code></td>
-</tr>
-<tr>
-<td>迴圈</td>
-<td>for、while、do...while</td>
-<td><code> for (let i = 0; i &lt; 3; i++) {<br/>   console.log(i);<br/> }<br/> <br/> let count = 0;<br/> while (count &lt; 3) {<br/>   console.log(count);<br/>   count++;<br/> } </code></td>
-</tr>
-<tr>
-<td>函式</td>
-<td>定義與呼叫，<br/> ES6 支援箭頭函式</td>
-<td><code> function greet(name) {<br/>   console.log("Hi, " + name);<br/> }<br/> greet("Amy");<br/> <br/> // 箭頭函式<br/> const add = (a, b) =&gt; a + b;<br/> console.log(add(2,3)); </code></td>
-</tr>
-<tr>
-<td>陣列與物件</td>
-<td>基本操作：存取元素、方法如 <code>push</code>、<code>forEach</code> 等</td>
-<td><code> let nums = [1,2,3];<br/> nums.push(4);<br/> nums.forEach(item =&gt; console.log(item));<br/> <br/> let person = { name: "Tom", age: 20 };<br/> console.log(person.name); </code></td>
-</tr>
-<tr>
-<td>註解</td>
-<td>單行 <code>//</code>，多行 <code>/* */</code></td>
-<td><code> // 這是單行註解<br/> /*<br/> 這是多行註解<br/> */ </code></td>
-</tr>
-</tbody>
-</table>
-<div class="tip"><strong>小提醒：</strong> JavaScript 語法彈性大，但容易出現隱含錯誤，建議使用嚴格模式 <code>'use strict';</code>，養成良好命名與註解習慣。</div>
-<h4>四、在網頁上的應用簡介</h4>
-<ul>
-<li>JavaScript 主要用於網頁互動、動態內容與事件處理。</li>
-<li>可透過 <code>&lt;script&gt;</code> 標籤直接在 HTML 內嵌或引用外部 JS 檔案：</li>
-</ul>
-<pre class="brush:html;auto-links:false;toolbar:false" contenteditable="false">&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-&lt;head&gt;&lt;title&gt;JS 範例&lt;/title&gt;&lt;/head&gt;
-&lt;body&gt;
-  &lt;button onclick="sayHello()"&gt;點我&lt;/button&gt;
-  &lt;script&gt;
-    function sayHello() {
-      alert("你好！");
-    }
-  &lt;/script&gt;
-&lt;/body&gt;
-&lt;/html&gt;</pre>
-<h4>五、常見錯誤與學習建議</h4>
-<ul>
-<li><strong>常見錯誤：</strong>
-<ul>
-<li>少分號或括號（雖然 JS 支援自動補全，但還是建議加上）。</li>
-<li>變數未宣告直接使用。</li>
-<li>區分 <code>==</code>（寬鬆相等）與 <code>===</code>（嚴格相等）。</li>
-<li>陣列與物件存取語法錯誤。</li>
-</ul>
-</li>
-<li><strong>學習建議：</strong>
-<ul>
-<li>多練習：在主控台嘗試各種語法。</li>
-<li>閱讀 MDN（Mozilla Developer Network）文件，查詢 JS 語法與用法。</li>
-<li>完成小專案，如計算機、Todo List、網頁互動等。</li>
-<li>多與他人討論，參加線上社群。</li>
-</ul>
-</li>
-</ul>
-<h4>六、進階主題（可視情況逐步學習）</h4>
-<ul>
-<li>ES6+ 新語法（let、const、箭頭函式、解構賦值、展開運算子、模組化等）</li>
-<li>事件處理、DOM 操作與網頁互動</li>
-<li>非同步程式（callback、Promise、async/await）</li>
-<li>物件導向程式設計、類別（class）</li>
-<li>前端框架（如 React、Vue、Angular）</li>
-<li>Node.js 伺服器端開發</li>
-</ul>
-<br />Python_ex1 << <a href='Python_ex1.html'>Previous</a> <a href='HTML and CSS.html'>Next</a> >> HTML and CSS</div>
+<p data-end="807" data-start="718">整體而言，這門課讓我體會到程式設計在實務上的價值，也培養了我將問題拆解、設計邏輯並逐步除錯的能力。這些能力不僅有助於後續課程學習，也能成為未來進入職場或進行專題研究時的重要基礎。</p>
+</div>
+</div><br />期末影片(三個小遊戲) << <a href='期末影片(三個小遊戲).html'>Previous</a> <a href='Ref.html'>Next</a> >> Ref</div>
         
     <!-- footer -->
       <div class="container">
