@@ -2931,9 +2931,30 @@ timer.set_timeout(check_and_move, 1000)</pre>
 <p><a href="https://mde.tw/cp2025/content/Brython.html?src=https://gist.githubusercontent.com/mdecycu/71ff1c69dd233e6a5a83dd60997950de/raw/7f33223c0c669eac2a2bbce5c60b610edfdd9c72/brython_robot_ex36.py">初探裝飾器(Decorator)</a> (36)</p>
 <p><a href="https://mde.tw/cp2025/content/Brython.html?src=https://gist.githubusercontent.com/mdecycu/71ff1c69dd233e6a5a83dd60997950de/raw/7f33223c0c669eac2a2bbce5c60b610edfdd9c72/brython_robot_ex37.py">使用 next() 和迭代器控制流程</a> (37)</p>
 <h1>組長(本人)</h1>
-<p>41023235</p>
+<p>41023235黃俊錡</p>
 <p><img alt="" height="268" src="/images/20_years_age-removebg-preview.png" width="267"/></p>
-<p><img alt="" height="228" src="/images/螢幕擷取畫面 2025-06-13 211516 (1).png" width="521"/></p><h1>w3</h1>
+<p><img alt="" height="228" src="/images/螢幕擷取畫面 2025-06-13 211516 (1).png" width="521"/></p>
+<h1>繞學號末三碼</h1>
+<h4>機器人繞學號末三碼(41023235)</h4>
+<p># Brython 機器人程式<br/># 範例：移動機器人<br/>from robot_lib import World, AnimatedRobot</p>
+<p>w = World(15, 10)<br/>r = AnimatedRobot(w, 2, 8)<br/>def turn_right():<br/>r.turn_left()<br/>r.turn_left()<br/>r.turn_left()<br/>r.move(3)<br/>turn_right()<br/>r.move(3)<br/>turn_right()<br/>r.move(3)<br/>r.turn_left()<br/>r.move(3)<br/>r.turn_left()<br/>r.move(3)</p>
+<p>r = AnimatedRobot(w, 7, 8)<br/>r.move(3)<br/>turn_right()<br/>r.move(3)<br/>turn_right()<br/>r.move(3)<br/>r = AnimatedRobot(w, 10, 5)<br/>turn_right()<br/>r.move(3)<br/>turn_right()<br/>r.move(3)</p>
+<p>r = AnimatedRobot(w, 15, 8)<br/>r.turn_left()<br/>r.turn_left()<br/>r.move(3)<br/>r.turn_left()<br/>r.move(3)<br/>r.turn_left()<br/>r.move(3)<br/>turn_right()<br/>r.move(3)<br/>turn_right()<br/>r.move(3)</p>
+<h1>青天白日滿地紅</h1>
+<h4>45度及90度的青天白日滿地紅</h4>
+<p>41023235所作:</p>
+<p>from browser import document as doc, html<br/>import math</p>
+<p>canvas = html.CANVAS(width=600, height=400)<br/>canvas.id = "twflag_rot"<br/>doc["brython_div1"] &lt;= canvas</p>
+<p>ctx = canvas.getContext("2d")</p>
+<p>flag_w = 250<br/>flag_h = 166<br/>gap = 20 # 國旗間距</p>
+<p>def draw_flag(x, y):<br/># 紅地<br/>ctx.fillStyle = 'rgb(255,0,0)'<br/>ctx.fillRect(x, y, flag_w, flag_h)<br/># 青天<br/>ctx.fillStyle = 'rgb(0,0,150)'<br/>ctx.fillRect(x, y, flag_w/2, flag_h/2)<br/># 白日位置<br/>cx = x + flag_w/4<br/>cy = y + flag_h/4</p>
+<p># 12道光芒<br/>ctx.beginPath()<br/>star_r = flag_w/8<br/>angle = 0<br/>for i in range(24):<br/>angle += 5 * math.pi * 2 / 12<br/>px = cx + math.cos(angle) * star_r<br/>py = cy + math.sin(angle) * star_r<br/>if i == 0:<br/>ctx.moveTo(px, py)<br/>else:<br/>ctx.lineTo(px, py)<br/>ctx.closePath()<br/>ctx.fillStyle = '#fff'<br/>ctx.fill()</p>
+<p># 藍圈<br/>ctx.beginPath()<br/>ctx.arc(cx, cy, flag_w * 17 / 240, 0, math.pi*2)<br/>ctx.fillStyle = 'rgb(0,0,149)'<br/>ctx.fill()</p>
+<p># 白心<br/>ctx.beginPath()<br/>ctx.arc(cx, cy, flag_w/16, 0, math.pi*2)<br/>ctx.fillStyle = '#fff'<br/>ctx.fill()</p>
+<p>def draw_flag_rotate(deg, posx, posy):<br/>rad = math.radians(deg)<br/>ctx.save()<br/>ctx.translate(posx + flag_w/2, posy + flag_h/2)<br/>ctx.rotate(rad)<br/>ctx.translate(-flag_w/2, -flag_h/2)<br/>draw_flag(0, 0)<br/>ctx.restore()</p>
+<p># 計算總寬度，讓國旗並排在畫布中間<br/>total_w = flag_w*2 + gap<br/>start_x = (canvas.width - total_w)/2<br/>start_y = (canvas.height - flag_h)/2</p>
+<p># 左側畫 45 度<br/>draw_flag_rotate(-45, start_x, start_y)</p>
+<p># 右側畫 90 度<br/>draw_flag_rotate(-90, start_x + flag_w + gap, start_y)</p><h1>w3</h1>
 <p>41023235所作</p>
 <p><span>w3: 什麼是 git, GitHub, gist 與 cmsimde? 如何使用這些工具？為什麼要使用這些工具？</span></p>
 <p><img alt="" height="4000" src="/images/w3 cp2025.jpg" width="667"/></p>
@@ -3117,6 +3138,7 @@ timer.set_timeout(check_and_move, 1000)</pre>
 </li>
 </ol>
 <p data-end="807" data-start="718">整體而言，這門課讓我體會到程式設計在實務上的價值，也培養了我將問題拆解、設計邏輯並逐步除錯的能力。這些能力不僅有助於後續課程學習，也能成為未來進入職場或進行專題研究時的重要基礎。</p>
+<h1>hw1</h1>
 </div>
 </div><h1>Ref</h1><h2>Reeborg</h2>
 <p><a href="https://mde.tw/cp2025/reeborg?lang=en&amp;mode=python&amp;menu=worlds/menus/select_collection_en.json&amp;name=Alone&amp;url=worlds/tutorial_en/harvest1.json&amp;editor=python/harvest1.py">https://mde.tw/cp2025/reeborg?lang=en&amp;mode=python&amp;menu=worlds/menus/select_collection_en.json&amp;name=Alone&amp;url=worlds/tutorial_en/harvest1.json&amp;editor=python/harvest1.py</a></p>
