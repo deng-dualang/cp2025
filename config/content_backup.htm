@@ -2954,7 +2954,40 @@ timer.set_timeout(check_and_move, 1000)</pre>
 <p>def draw_flag_rotate(deg, posx, posy):<br/>rad = math.radians(deg)<br/>ctx.save()<br/>ctx.translate(posx + flag_w/2, posy + flag_h/2)<br/>ctx.rotate(rad)<br/>ctx.translate(-flag_w/2, -flag_h/2)<br/>draw_flag(0, 0)<br/>ctx.restore()</p>
 <p># 計算總寬度，讓國旗並排在畫布中間<br/>total_w = flag_w*2 + gap<br/>start_x = (canvas.width - total_w)/2<br/>start_y = (canvas.height - flag_h)/2</p>
 <p># 左側畫 45 度<br/>draw_flag_rotate(-45, start_x, start_y)</p>
-<p># 右側畫 90 度<br/>draw_flag_rotate(-90, start_x + flag_w + gap, start_y)</p><h1>w3</h1>
+<p># 右側畫 90 度<br/>draw_flag_rotate(-90, start_x + flag_w + gap, start_y)</p><h1>0~9</h1>
+<p>顯示0~9</p>
+<p>41023235所作:</p>
+<p># ================== 你原本的 world / robot 全部保留 ==================<br/>from robot_lib import World as BaseWorld, AnimatedRobot as BaseRobot, timer, CELL_SIZE</p>
+<p># --- 1. 定義世界（加入細格） ---<br/>class MyWorld(BaseWorld):<br/>def __init__(self, width=10, height=10, sub_cell=5):<br/>super().__init__(width, height)<br/>self.sub_cell = sub_cell<br/>self.sub_size = CELL_SIZE // sub_cell<br/>self._draw_fine_grid()</p>
+<p>def _draw_fine_grid(self):<br/>ctx = self.layers["grid"].getContext("2d")<br/>ctx.strokeStyle = "#e0e0e0"<br/>ctx.lineWidth = 0.5<br/>for i in range(self.width * self.sub_cell + 1):<br/>x = i * self.sub_size<br/>ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, self.height * CELL_SIZE); ctx.stroke()<br/>for j in range(self.height * self.sub_cell + 1):<br/>y = j * self.sub_size<br/>ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(self.width * CELL_SIZE, y); ctx.stroke()</p>
+<p>def sub_to_px(self, sub_x, sub_y):<br/>big_x = sub_x // self.sub_cell<br/>big_y = sub_y // self.sub_cell<br/>offset_x = (sub_x % self.sub_cell) * self.sub_size<br/>offset_y = (sub_y % self.sub_cell) * self.sub_size<br/>px = big_x * CELL_SIZE + offset_x + self.sub_size // 2<br/>py = big_y * CELL_SIZE + offset_y + self.sub_size // 2<br/>return px, py</p>
+<p>def draw_line(self, x1, y1, x2, y2):<br/>ctx = self.layers["objects"].getContext("2d")<br/>ctx.strokeStyle = "#d33"<br/>ctx.lineWidth = 9<br/>ctx.lineCap = "round"<br/>ctx.beginPath()<br/>ctx.moveTo(*self.sub_to_px(x1, y1))<br/>ctx.lineTo(*self.sub_to_px(x2, y2))<br/>ctx.stroke()</p>
+<p><br/># --- 2. 定義機器人（以細格移動） ---<br/>class MyRobot(BaseRobot):<br/>def __init__(self, world, start_big_x=1, start_big_y=1):<br/>super().__init__(world, start_big_x, start_big_y)<br/>self.sub_x = start_big_x * world.sub_cell + world.sub_cell // 2<br/>self.sub_y = start_big_y * world.sub_cell + world.sub_cell // 2<br/>self.robot_size = world.sub_size * 1.8</p>
+<p>def _draw_robot(self):<br/>self.robot_ctx.clearRect(0, 0, self.world.width * CELL_SIZE, self.world.height * CELL_SIZE)<br/>img = self.images[self.facing]<br/>px, py = self.world.sub_to_px(self.sub_x, self.sub_y)<br/>s = self.robot_size<br/>if img.complete:<br/>self.robot_ctx.drawImage(img, px - s//2, py - s//2, s, s)</p>
+<p>def teleport_to(self, tx, ty):<br/>def action(done):<br/>self.sub_x, self.sub_y = tx, ty<br/>self._draw_robot()<br/>timer.set_timeout(done, 10)<br/>self.queue.append(action)<br/>self._run_queue()</p>
+<p>def move_to(self, tx, ty, draw_trace=True):<br/>def action(done):<br/>def step():<br/>if self.sub_x == tx and self.sub_y == ty:<br/>done(); return</p>
+<p>prev_x, prev_y = self.sub_x, self.sub_y</p>
+<p>dx = tx - self.sub_x<br/>dy = ty - self.sub_y</p>
+<p>if dx &gt; 0: target = "E"<br/>elif dx &lt; 0: target = "W"<br/>elif dy &gt; 0: target = "S"<br/>else: target = "N"</p>
+<p>while self.facing != target:<br/>idx = self.facing_order.index(self.facing)<br/>self.facing = self.facing_order[(idx + 1) % 4]</p>
+<p>self.sub_x += 1 if dx &gt; 0 else (-1 if dx &lt; 0 else 0)<br/>self.sub_y += 1 if dy &gt; 0 else (-1 if dy &lt; 0 else 0)</p>
+<p>if draw_trace:<br/>self.world.draw_line(prev_x, prev_y, self.sub_x, self.sub_y)</p>
+<p>self._draw_robot()<br/>timer.set_timeout(step, 40)</p>
+<p>step()<br/>self.queue.append(action)<br/>self._run_queue()</p>
+<p><br/># ================== 3. 七段顯示器（放大版） ==================</p>
+<p>DIGIT_SCALE = 3 # ⭐⭐ ← 你只要改這裡即可（1=原本大小，2=兩倍，3=三倍……）</p>
+<p>SEGMENTS = {<br/>0:[1,1,1,1,1,1,0], 1:[0,1,1,0,0,0,0], 2:[1,1,0,1,1,0,1],<br/>3:[1,1,1,1,0,0,1], 4:[0,1,1,0,0,1,1], 5:[1,0,1,1,0,1,1],<br/>6:[1,0,1,1,1,1,1], 7:[1,1,1,0,0,0,0], 8:[1,1,1,1,1,1,1],<br/>9:[1,1,1,1,0,1,1]<br/>}</p>
+<p># 原始七段 PATH<br/>RAW_PATHS = [<br/>[(0,0),(1,0),(2,0),(3,0)], # A<br/>[(3,0),(3,1),(3,2),(3,3)], # B<br/>[(3,3),(3,4),(3,5),(3,6)], # C<br/>[(0,6),(1,6),(2,6),(3,6)], # D<br/>[(0,3),(0,4),(0,5),(0,6)], # E<br/>[(0,0),(0,1),(0,2),(0,3)], # F<br/>[(0,3),(1,3),(2,3),(3,3)] # G<br/>]</p>
+<p># 依比例縮放 (x*scale, y*scale)<br/>PATHS = []<br/>for seg in RAW_PATHS:<br/>PATHS.append([(x*DIGIT_SCALE, y*DIGIT_SCALE) for (x,y) in seg])</p>
+<p><br/>def draw_digit(robot, digit, ox, oy):<br/>if digit not in SEGMENTS:<br/>return<br/>for i, on in enumerate(SEGMENTS[digit]):<br/>if not on:<br/>continue<br/>path = PATHS[i]</p>
+<p># 起點<br/>robot.teleport_to(ox + path[0][0], oy + path[0][1])</p>
+<p># 畫線<br/>for j in range(1, len(path)):<br/>robot.move_to(ox + path[j][0], oy + path[j][1], draw_trace=True)</p>
+<p><br/># ================== 主程式 ==================<br/># 自動調整世界寬度：每個數字寬 4*scale，加 2 的間距<br/>digit_width = 4 * DIGIT_SCALE + 2<br/>world_width = digit_width * 10 + 5</p>
+<p>world = MyWorld(world_width, 80, sub_cell=5)<br/>robot = MyRobot(world, 0, 0)</p>
+<p>START_Y = 10 # 數字頂端位置（你可調）</p>
+<p>for i in range(10):<br/>start_x = 2 + i * digit_width<br/>draw_digit(robot, i, start_x, START_Y)</p>
+<p>print("機器人大字版：0123456789 正在繪製中…")</p>
+<h1>w3</h1>
 <p>41023235所作</p>
 <p><span>w3: 什麼是 git, GitHub, gist 與 cmsimde? 如何使用這些工具？為什麼要使用這些工具？</span></p>
 <p><img alt="" height="4000" src="/images/w3 cp2025.jpg" width="667"/></p>
