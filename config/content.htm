@@ -2954,7 +2954,16 @@ timer.set_timeout(check_and_move, 1000)</pre>
 <p>def draw_flag_rotate(deg, posx, posy):<br/>rad = math.radians(deg)<br/>ctx.save()<br/>ctx.translate(posx + flag_w/2, posy + flag_h/2)<br/>ctx.rotate(rad)<br/>ctx.translate(-flag_w/2, -flag_h/2)<br/>draw_flag(0, 0)<br/>ctx.restore()</p>
 <p># 計算總寬度，讓國旗並排在畫布中間<br/>total_w = flag_w*2 + gap<br/>start_x = (canvas.width - total_w)/2<br/>start_y = (canvas.height - flag_h)/2</p>
 <p># 左側畫 45 度<br/>draw_flag_rotate(-45, start_x, start_y)</p>
-<p># 右側畫 90 度<br/>draw_flag_rotate(-90, start_x + flag_w + gap, start_y)</p><h1>0~9</h1>
+<p># 右側畫 90 度<br/>draw_flag_rotate(-90, start_x + flag_w + gap, start_y)</p><h1>HW1</h1>
+<p><span>請將程式碼存放在個人作業倉儲中的 python 目錄後，利用程式連結完成下列任務:</span></p>
+<p>41023235 黃俊錡所作:</p>
+<p>around1:</p>
+<p>from robot_lib import World, AnimatedRobot<br/>w = World(10, 10)<br/>r = AnimatedRobot(w, 1, 1)<br/>def go_round():<br/>for i in range(4):<br/>r.move(9)<br/>r.turn_left()<br/>go_round()</p>
+<p></p>
+<p><span>around2:</span></p>
+<p><span>from robot_lib import World, AnimatedRobot<br/>w = World(10, 10)<br/>r = AnimatedRobot(w, 4, 1)<br/>def turn_right():<br/>r.turn_left()<br/>r.turn_left()<br/>r.turn_left()<br/><br/>r.move(6)<br/>r.turn_left()<br/>r.move(5)<br/>r.turn_left()<br/>r.move(4)<br/>turn_right()<br/>r.move(4)<br/>r.turn_left()<br/>r.move(5)<br/>r.turn_left()<br/>r.move(10)<br/>r.turn_left()<br/>r.move(3)<br/>round()</span></p>
+<p><span></span></p>
+<h1>0~9</h1>
 <p>顯示0~9</p>
 <p>41023235所作:</p>
 <p># ================== 你原本的 world / robot 全部保留 ==================<br/>from robot_lib import World as BaseWorld, AnimatedRobot as BaseRobot, timer, CELL_SIZE</p>
@@ -2986,8 +2995,7 @@ timer.set_timeout(check_and_move, 1000)</pre>
 <p>world = MyWorld(world_width, 80, sub_cell=5)<br/>robot = MyRobot(world, 0, 0)</p>
 <p>START_Y = 10 # 數字頂端位置（你可調）</p>
 <p>for i in range(10):<br/>start_x = 2 + i * digit_width<br/>draw_digit(robot, i, start_x, START_Y)</p>
-<p>print("機器人大字版：0123456789 正在繪製中…")</p>
-<h1>w3</h1>
+<p>print("機器人大字版：0123456789 正在繪製中…")</p><h1>w3</h1>
 <p>41023235所作</p>
 <p><span>w3: 什麼是 git, GitHub, gist 與 cmsimde? 如何使用這些工具？為什麼要使用這些工具？</span></p>
 <p><img alt="" height="4000" src="/images/w3 cp2025.jpg" width="667"/></p>
